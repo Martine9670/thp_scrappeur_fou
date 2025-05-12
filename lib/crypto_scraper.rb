@@ -1,32 +1,31 @@
-require 'nokogiri'
-require 'open-uri'
+require 'httparty'
+require 'json'
 
-class CryptoScraper
-  URL = 'https://coinmarketcap.com/'
+def fetch_crypto_prices
+  url = "https://api.coingecko.com/api/v3/coins/markets"
+  params = {
+    vs_currency: "usd",
+    order: "market_cap_desc",
+    per_page: 10,
+    page: 1,
+    sparkline: false
+  }
 
-  def fetch_prices
-    puts "Connexion à #{URL}..."
-    html = URI.open(URL)
-    doc = Nokogiri::HTML(html)
+  response = HTTParty.get(url, query: params)
+  data = JSON.parse(response.body)
 
-    cryptos_array = []
+  crypto_array = []
 
-    rows = doc.css('table.cmc-table tbody tr')
-    puts "Nombre de lignes récupérées : #{rows.size}"
-
-    rows.each_with_index do |row, index|
-      symbol = row.css('td:nth-child(3) div').text.strip
-      price_str = row.css('td:nth-child(4)').text.strip.gsub(/[^0-9\.,]/, '').gsub(',', '')
-
-      begin
-        price = price_str.to_f
-        cryptos_array << { symbol => price }
-        puts "#{index + 1}. #{symbol} => $#{price}"
-      rescue => e
-        puts "Erreur lors du parsing pour #{symbol}: #{e.message}"
-      end
-    end
-
-    cryptos_array
+  data.each do |crypto|
+    symbol = crypto["symbol"].upcase
+    price = crypto["current_price"].to_f
+    crypto_array << { symbol => price }
   end
+
+  crypto_array
+end
+
+if $PROGRAM_NAME == __FILE__
+  puts "Résultat final :"
+  puts fetch_crypto_prices
 end
