@@ -1,26 +1,31 @@
-# Ruby Scraping - Exercices Crypto & Mairies
+# Ruby Scraping - Crypto & Town Halls Exercises
 
-Ce projet contient deux petits programmes Ruby pour s'entraîner au scraping web avec Nokogiri.
+This project contains two small Ruby programs to practice **web scraping** with `Nokogiri`.
 
 ---
 
-## Exercice 1 : Cryptomonnaies
+## Exercise 1: Cryptocurrencies
 
-**Objectif :** Récupérer les cours des cryptomonnaies depuis le site CoinMarketCap.
+**Objective:**  
+Retrieve the prices of cryptocurrencies from the CoinMarketCap website.
 
-## Exercice 2 : Emails des mairies du Val d'Oise
+---
 
-**Objectif :** Récupérer les adresses e-mail de toutes les mairies du Val d'Oise depuis l'annuaire des mairies.
+## Exercise 2: Emails of Town Halls in Val d'Oise
 
+**Objective:**  
+Retrieve the email addresses of all the town halls in the Val d'Oise department from the town hall directory website.
 
-👤 Auteur
+---
 
-    Nom : Marine PINNA
+## 👤 Author
 
-    GitHub : Martine9670
+- **Name:** Marine PINNA  
+- **GitHub:** [Martine9670](https://github.com/Martine9670)  
+- **Discord:** Martine PINNA
 
-    Discord : Martine PINNA
+---
 
-    📝 Remarque
+## 📝 Note
 
-    Le site annuaire-des-mairies.com peut parfois être indisponible...
+The website annuaire-des-mairies.com may sometimes be unavailable...

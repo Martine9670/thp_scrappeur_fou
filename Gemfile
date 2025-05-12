@@ -1,5 +1,7 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "nokogiri"
-
-gem "open-uri"
+gem 'nokogiri'
+gem 'rspec'
+gem 'pry'
+gem 'httparty'
+gem 'json'
