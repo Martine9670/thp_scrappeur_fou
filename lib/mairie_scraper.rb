@@ -1,43 +1,44 @@
+require 'httparty'
 require 'nokogiri'
-require 'open-uri'
 
-class MairieScraper
-  BASE_URL = "https://www.annuaire-des-mairies.com"
+# Récupère l'email d'une mairie à partir de son URL
+def get_townhall_email(townhall_url)
+  response = HTTParty.get(townhall_url)
+  parsed_page = Nokogiri::HTML(response.body)
 
-  # 1. Récupère l'e-mail depuis une page de mairie
-  def get_townhall_email(townhall_url)
-    page = Nokogiri::HTML(URI.open(townhall_url))
-    email = page.xpath('//td[contains(text(), "@")]').text.strip
-    email
-  rescue
-    nil
+  email = parsed_page.at('a[href^="mailto:"]').text.strip
+  email
+end
+
+# Récupère toutes les URLs des mairies du Val d'Oise
+def get_townhall_urls
+  base_url = "http://annuaire-des-mairies.com/val-d-oise.html"
+  response = HTTParty.get(base_url)
+  parsed_page = Nokogiri::HTML(response.body)
+
+  townhall_urls = []
+  parsed_page.css('a[href^="http://www."]').each do |link|
+    townhall_urls << link['href']
   end
 
-  # 2. Récupère toutes les URLs des mairies du Val d'Oise
-  def get_townhall_urls
-    index_url = "#{BASE_URL}/val-d-oise.html"
-    page = Nokogiri::HTML(URI.open(index_url))
+  townhall_urls
+end
 
-    urls = page.css('a.lientxt').map do |link|
-      name = link.text.strip
-      path = link['href'].sub('./', '')
-      { name => "#{BASE_URL}/#{path}" }
-    end
+# Récupère tous les emails des mairies
+def get_all_townhall_emails
+  townhall_urls = get_townhall_urls
+  townhall_emails = []
 
-    urls
+  townhall_urls.each do |url|
+    email = get_townhall_email(url)
+    city_name = url.split('/').last.split('.').first
+    townhall_emails << { city_name => email }
   end
 
-  # 3. Combine tout pour obtenir un array de hash { "ville" => "email" }
-  def get_townhall_emails
-    puts "Récupération des URLs..."
-    townhall_urls = get_townhall_urls
+  townhall_emails
+end
 
-    puts "Scraping des e-mails..."
-    townhall_urls.map.with_index do |hash, i|
-      name, url = hash.first
-      email = get_townhall_email(url)
-      puts "#{i + 1}. #{name} => #{email}"
-      { name => email }
-    end
-  end
+if __FILE__ == $PROGRAM_NAME
+  puts "Emails des mairies du Val d'Oise :"
+  puts get_all_townhall_emails
 end
