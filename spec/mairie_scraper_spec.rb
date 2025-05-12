@@ -1,31 +1,45 @@
-require_relative '../lib/mairie_scraper'
+require 'rspec'
+require_relative '../lib/mairie_christmas'
 
-RSpec.describe MairieScraper do
-  let(:scraper) { MairieScraper.new }
+RSpec.describe 'Mairie Christmas' do
+  describe '#get_townhall_email' do
+    it 'récupère correctement l\'email d\'une mairie' do
+      # Exemple d'URL de mairie
+      townhall_url = 'http://www.averne.mairie95.fr'
+      
+      # Appel de la méthode pour récupérer l'email
+      email = get_townhall_email(townhall_url)
 
-  describe "#get_townhall_email" do
-    it "renvoie une adresse email valide pour une mairie" do
-      url = "https://www.annuaire-des-mairies.com/95/avernes.html"
-      email = scraper.get_townhall_email(url)
-      expect(email).to match(/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i)
+      # Vérifier que l'email récupéré est correct
+      expect(email).to match(/\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/) # Vérification de la validité de l'email
     end
   end
 
-  describe "#get_townhall_urls" do
-    it "renvoie une liste de villes avec leur URL" do
-      urls = scraper.get_townhall_urls
-      expect(urls).not_to be_empty
-      expect(urls.first.keys.first).to be_a(String)
-      expect(urls.first.values.first).to match(/^https:\/\/www\.annuaire-des-mairies\.com\/\S+\.html$/)
+  describe '#get_townhall_urls' do
+    it 'récupère correctement les URLs des mairies' do
+      townhall_urls = get_townhall_urls
+
+      # Vérifier qu'on a bien des URLs
+      expect(townhall_urls).to be_an(Array)
+      expect(townhall_urls).to_not be_empty
+
+      # Vérifier qu'une URL est bien formée
+      expect(townhall_urls.first).to match(/^http:\/\/www\./)
     end
   end
 
-  describe "#get_townhall_emails" do
-    it "renvoie un array de hash contenant des noms de ville et emails" do
-      emails = scraper.get_townhall_emails
-      expect(emails).not_to be_empty
-      expect(emails.first).to be_a(Hash)
-      expect(emails.first.keys.first).to be_a(String)
+  describe '#get_all_townhall_emails' do
+    it 'récupère correctement tous les emails des mairies' do
+      townhall_emails = get_all_townhall_emails
+
+      # Vérifier qu'on a bien un array d'emails
+      expect(townhall_emails).to be_an(Array)
+      expect(townhall_emails).to_not be_empty
+
+      # Vérifier que chaque élément est un hash avec un nom de ville et un email
+      expect(townhall_emails.first).to be_a(Hash)
+      expect(townhall_emails.first.keys.first).to be_a(String)
+      expect(townhall_emails.first.values.first).to match(/\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/) # Vérification de la validité de l'email
     end
   end
 end
