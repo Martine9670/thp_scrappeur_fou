@@ -12,7 +12,7 @@ end
 
 # Récupère toutes les URLs des mairies du Val d'Oise
 def get_townhall_urls
-  base_url = "http://annuaire-des-mairies.com/val-d-oise.html"
+  base_url = "https://lannuaire.service-public.fr/navigation/ile-de-france/val-d-oise/mairie"
   response = HTTParty.get(base_url)
   parsed_page = Nokogiri::HTML(response.body)
 

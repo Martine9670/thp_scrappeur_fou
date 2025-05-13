@@ -37,9 +37,8 @@ def get_all_deputies
 
   deputy_urls.each do |url|
     deputies << get_deputy_info(url)
+    
   end
-
-  deputies
 end
 
 # Appel principal pour afficher la liste des députés
