@@ -1,7 +1,7 @@
 require 'rspec'
-require_relative '../lib/mairie_christmas'
+require_relative '../lib/mairie_scraper'
 
-RSpec.describe 'Mairie Christmas' do
+RSpec.describe 'mairie_scraper' do
   describe '#get_townhall_email' do
     it 'récupère correctement l\'email d\'une mairie' do
       # Exemple d'URL de mairie
